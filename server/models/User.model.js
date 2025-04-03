@@ -9,6 +9,9 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
+            validators: {
+                isEmail: true,
+            },
         },
         password: {
             type: DataTypes.STRING,
@@ -25,6 +28,9 @@ module.exports = (sequelize, DataTypes) => {
         pfp: {
             type: DataTypes.STRING,
             allowNull: true,
+            validators: {
+                isUrl: true,
+            },
         },
     }, { timestamps: true });
 
