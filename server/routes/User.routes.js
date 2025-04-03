@@ -6,8 +6,8 @@ const router = express.Router();
 
 router.post("/create-user", verifyToken, isAdmin, userController.createUser);
 router.get("/all-users", verifyToken, isAdmin, userController.getAllUsers);
-router.get("/:id", verifyToken, isAdmin, userController.getUserById); // Get user by ID
-router.put("/:id", verifyToken, isAdmin, userController.updateUser); // Update user
-router.delete("/:id", verifyToken, isAdmin, userController.deleteUser); // Delete user
+router.get("/:id", verifyToken, isAdmin, userController.getUserById);
+router.put("/:id", verifyToken, isAdmin, userController.updateUser);
+router.delete("/:id", verifyToken, isAdmin, userController.deleteUser);
 
 module.exports = router;

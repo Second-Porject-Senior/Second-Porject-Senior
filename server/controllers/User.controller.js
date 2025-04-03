@@ -1,32 +1,31 @@
-const { User } = require('../database/index.js'); // Correct import for User model
+const { User } = require('../database/index.js'); 
 
 // Controller for handling user-related operations
 const UserController = {
     createUser: async (req, res) => {
         try {
             const { name, email, password, role } = req.body;
-
-            // Ensure req.user exists and has a role
             if (!req.user || req.user.role !== "admin") {
                 return res.status(403).json({ message: "Unauthorized action" });
             }
-
             const user = await User.create({ name, email, password, role });
-
             res.status(201).json({ message: "User created successfully", user });
         } catch (error) {
             res.status(500).json({ message: "Error creating user", error });
         }
     },
+
+
     // Get all users
     getAllUsers: async (req, res) => {
         try {
-            const users = await User.findAll(); // Use Sequelize's findAll
+            const users = await User.findAll();
             res.status(200).json(users);
         } catch (error) {
             res.status(500).json({ message: 'Error fetching users', error: error.message });
         }
     },
+
 
     // Get a single user by ID
     getUserById: async (req, res) => {
@@ -57,6 +56,7 @@ const UserController = {
             res.status(500).json({ message: 'Error updating user', error });
         }
     },
+    
 
     // Delete a user by ID
     deleteUser: async (req, res) => {
