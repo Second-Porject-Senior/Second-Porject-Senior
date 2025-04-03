@@ -33,12 +33,10 @@ Estate.belongsTo(Category, { foreignKey: 'category_id' });
 //   .sync({ force: true })
 //   .then(async () => {
 //     console.log("Tables are being created in the correct order");
-//     await Category.sync({ force: true });
-//     await Estate.sync({ force: true });
 //     console.log("Tables are created successfully");
 //   })
 //   .catch((err) => {
 //     console.error("Error synchronizing tables:", err);
 //   });
 
-module.exports = { sequelize, Estate, Category };
+module.exports = { sequelize, Estate, Category , User };
