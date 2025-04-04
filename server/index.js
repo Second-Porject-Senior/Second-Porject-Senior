@@ -1,18 +1,21 @@
 const express = require("express");
 require ("dotenv").config({ path: "./utils/.env" });
+const cookieParser = require('cookie-parser');
 
 const App = express();
 const port = process.env.SERVER_PORT || 3000;
 const db = require("./database/index.js");
 const cors = require("cors");
-require("dotenv").config();
 
 const userRoutes = require("./routes/User.routes.js");
 const authRoutes = require("./routes/Auth.routes.js");
 
-
 App.use(express.json());
-App.use(cors());
+App.use(cookieParser());
+App.use(cors({
+  origin: 'http://localhost:5173', // your React app's URL
+  credentials: true
+}));
 
 App.use("/api/users", userRoutes);
 App.use("/api/auth", authRoutes);
