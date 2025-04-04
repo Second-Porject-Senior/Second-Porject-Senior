@@ -24,6 +24,7 @@ sequelize
 const User = require('../models/User.model')(sequelize, DataTypes);
 const Estate = require('../models/Estate.model')(sequelize, DataTypes);
 const Category = require('../models/Categorie.model')(sequelize, DataTypes);
+const Contact = require('../models/Contactus.models')(sequelize, DataTypes);
 
 Category.hasMany(Estate, { foreignKey: 'category_id' });
 Estate.belongsTo(Category, { foreignKey: 'category_id' });
