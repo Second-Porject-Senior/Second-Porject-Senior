@@ -1,43 +1,22 @@
-import React from 'react'
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Layout from "./Layout/Layout.jsx";
 import Navbar from "./Components/Navbar.jsx";
-import Categories from "./Components/Categories.jsx";
-import Shop from "./Components/Shop.jsx";
-import Home from "./Pages/Home.jsx";
-import Cart from "./Components/Cart.jsx";
-
-
-
-
-
-
-
+import Home from "./Components/Home.jsx";
+import "./css/Navbar.css";
 
 function App() {
+  return (
     <BrowserRouter>
+      <div className="app">
         <Navbar />
         <Routes>
-        <Route element={<Layout />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/categories" element={<Categories />} />
-        <Route path="/shop" element={<Shop />} />
-        <Route path="/cart" element={<Cart />} />
-
-
-
-
- </Route>
+          <Route path="/" element={<Home />} />
+          <Route path="/estate" element={<div>Estate Page</div>} />
+          <Route path="/contact" element={<div>Contact Page</div>} />
         </Routes>
-      </BrowserRouter>
-
-
-
-  return (
-    <div>
-      
-    </div>
-  )
+      </div>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
