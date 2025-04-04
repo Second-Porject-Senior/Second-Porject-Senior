@@ -1,4 +1,4 @@
-const { User } = require('../database/index.js'); 
+const { User } = require('../database/index.js');
 
 // Controller for handling user-related operations
 const UserController = {
@@ -56,7 +56,7 @@ const UserController = {
             res.status(500).json({ message: 'Error updating user', error });
         }
     },
-    
+
 
     // Delete a user by ID
     deleteUser: async (req, res) => {

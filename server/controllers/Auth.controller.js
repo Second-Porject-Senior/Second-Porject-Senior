@@ -3,53 +3,49 @@ const { Op } = require('sequelize');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { User } = require("../database/index");
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = process.env.JWT_SECRET || "default_secret"; // Ensure it's loaded
 
 // Cookie options
 const cookieOptions = {
-    httpOnly: true, // Prevents JavaScript access to the cookie
-    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-    sameSite: 'strict', // Protect against CSRF
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 1 day
 };
 
-// Function to register a user
+// 🔹 Register User
 exports.register = async (req, res) => {
-    let { email, username, password } = req.body;
-    email = email.trim();
-    username = username.trim();
-    password = password.trim();
-
-    // Validate input fields
-    if (!email || !username || !password) {
-        return res.status(400).json({ error: 'All fields are required' });
-    } else if (!/^[a-zA-Z0-9]+$/.test(username)) {
-        return res.status(400).json({ error: 'Username can only contain letters and numbers' });
-    } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
-        return res.status(400).json({ error: 'Invalid email format' });
-    } else if (password.length < 8) {
-        return res.status(400).json({ error: 'Password must be at least 8 characters long' });
-    }
-
     try {
-        const existingEmail = await User.findOne({ where: { email } });
-        if (existingEmail) {
-            return res.status(400).json({ error: 'Email already exists' });
-        }
-        const existingUsername = await User.findOne({ where: { username } });
-        if (existingUsername) {
-            return res.status(400).json({ error: 'Username already exists' });
+        let { email, username, password } = req.body;
+        email = email.trim();
+        username = username.trim();
+        password = password.trim();
+
+        // Validate input
+        if (!email || !username || !password) {
+            return res.status(400).json({ error: 'All fields are required' });
+        } else if (!/^[a-zA-Z0-9]+$/.test(username)) {
+            return res.status(400).json({ error: 'Username can only contain letters and numbers' });
+        } else if (!/^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+            return res.status(400).json({ error: 'Invalid email format' });
+        } else if (password.length < 8) {
+            return res.status(400).json({ error: 'Password must be at least 8 characters long' });
         }
 
-        // Hash the password
+        // Check if user exists
+        const existingUser = await User.findOne({
+            where: {
+                [Op.or]: [{ email }, { username }]
+            }
+        });
+
+        if (existingUser) {
+            return res.status(400).json({ error: 'Email or username already exists' });
+        }
+
+        // Hash password
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        // Create the user
-        const user = await User.create({
-            email,
-            username,
-            password: hashedPassword
-        });
+        // Create user
+        await User.create({ email, username, password: hashedPassword });
 
         res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
@@ -58,51 +54,27 @@ exports.register = async (req, res) => {
     }
 };
 
-// Function to login a user
+// 🔹 Login User
 exports.login = async (req, res) => {
-    const { identifier, password } = req.body;
-    identifier = identifier.trim();
-    password = password.trim();
-    // Validate input fields
-    if (!identifier || !password) {
-        return res.status(400).json({ error: 'All fields are required' });
-    }
     try {
-        // Find the user by either username or email
+        let { identifier, password } = req.body;
+        if (!identifier || !password) {
+            return res.status(400).json({ error: 'Email/username and password are required' });
+        }
+        // Find user
         const user = await User.findOne({
             where: {
-                [Op.or]: [
-                    { username: identifier },
-                    { email: identifier }
-                ]
+                [Op.or]: [{ username: identifier }, { email: identifier }]
             }
         });
-
-        if (!user) {
-            return res.status(401).json({ error: 'Invalid credentials' });
-        }
-
+        if (!user) return res.status(401).json({ error: 'Invalid credentials' });
         // Check password
         const validPassword = await bcrypt.compare(password, user.password);
-        if (!validPassword) {
-            return res.status(401).json({ error: 'Invalid credentials' });
-        }
-
-        // Create and sign JWT token
-        const token = jwt.sign(
-            { id: user.id, username: user.username },
-            JWT_SECRET,
-            { expiresIn: '15m' }
-        );
-
-        // Set the token in an HTTP-only cookie
-        res.cookie("token", token, {
-            httpOnly: true
-            //   ...cookieOptions,
-            //   maxAge: 15 * 60 * 1000 // 15 minutes
-        });
-
-        // Send response without including the token in the body
+        if (!validPassword) return res.status(401).json({ error: 'Invalid credentials' });
+        // Create token
+        const token = jwt.sign({ id: user.id, username: user.username, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
+        // Set cookie
+        res.cookie("token", token, cookieOptions);
         res.json({ message: 'Login successful' });
     } catch (error) {
         console.error('Login error:', error);
@@ -110,17 +82,8 @@ exports.login = async (req, res) => {
     }
 };
 
-// Function to logout
+// 🔹 Logout
 exports.logout = async (req, res) => {
-    try {
-        // Clear the token cookie
-        res.clearCookie('token', {
-            ...cookieOptions,
-            maxAge: 0
-        });
-        res.json({ message: 'Logged out successfully' });
-    } catch (error) {
-        console.error('Logout error:', error);
-        res.status(500).json({ error: 'Error during logout' });
-    }
+    res.clearCookie("token", { ...cookieOptions, maxAge: 0 });
+    res.json({ message: "Logged out successfully" });
 };
