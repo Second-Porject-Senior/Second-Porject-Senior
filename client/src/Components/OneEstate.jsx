@@ -1,6 +1,6 @@
 import React from 'react';
 
-const EstateDetails = ({estate}) => {
+const OneEstate = ({estate}) => {
   return (
     <div>
       <h2>{estate.title}</h2>
@@ -12,4 +12,4 @@ const EstateDetails = ({estate}) => {
   );
 };
 
-export default EstateDetails;
+export default OneEstate;

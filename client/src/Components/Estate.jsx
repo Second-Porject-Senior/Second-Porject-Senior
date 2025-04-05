@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import EstateDetails from './EstateDetails.jsx';
 import axios from 'axios';
+import OneEstate from './OneEstate.jsx';
 
 const Estate = () => {
   const [estates, setEstates] = useState([]);
@@ -19,7 +19,7 @@ const Estate = () => {
       <h1>Available Estates</h1>
       <div>
         {estates.map((estate) => (
-          <EstateDetails key={estate.id} estate={estate} />
+          <OneEstate key={estate.id} estate={estate} />
         ))}
       </div>
     </div>
