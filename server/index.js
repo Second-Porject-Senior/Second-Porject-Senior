@@ -9,14 +9,11 @@ const cors = require("cors");
 
 const userRoutes = require("./routes/User.routes.js");
 const authRoutes = require("./routes/Auth.routes.js");
-const categoryRoutes = require("./routes/Ctegory.routes.js");
+const categoryRoutes = require("./routes/Category.routes.js");
 
 App.use(express.json());
 App.use(cookieParser());
-App.use(cors({
-  origin: 'http://localhost:5173', // your React app's URL
-  credentials: true
-}));
+App.use(cors())
 
 App.use("/api/users", userRoutes);
 App.use("/api/auth", authRoutes);
