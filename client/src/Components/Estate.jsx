@@ -7,7 +7,7 @@ const Estate = () => {
 
   useEffect(() => {
     const fetchEstates = async () => {
-      const response = await axios.get('http://localhost:3000/api/estates'); // Replace with your API endpoint
+      const response = await axios.get('http://localhost:3000/api/estate/getAll'); 
       setEstates(response.data);
     };
 
