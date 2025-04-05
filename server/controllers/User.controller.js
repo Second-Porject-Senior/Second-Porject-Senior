@@ -1,4 +1,5 @@
 const { User } = require('../database/index.js');
+const { isAdmin } = require('../middlewares/Auth.middleware.js');
 
 // Controller for handling user-related operations
 const UserController = {
@@ -15,10 +16,12 @@ const UserController = {
         }
     },
 
-
     // Get all users
     getAllUsers: async (req, res) => {
         try {
+            if (!isAdmin(req.cookies.token) || !isAdmin(req.headers.token.split(" ")[1])) {
+                return res.status(403).json({ message: 'Access denied. Admins only.' });
+            }
             const users = await User.findAll();
             res.status(200).json(users);
         } catch (error) {

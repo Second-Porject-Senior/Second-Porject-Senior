@@ -1,12 +1,16 @@
 const jwt = require("jsonwebtoken");
 const { User } = require("../database/index.js");
 
-exports.isAdmin = (req, res, next) => {
-    if (req.user.role !== "admin") {
-        return res.status(403).json({ message: "Access denied. Admins only." });
+exports.isAdmin = (token) => {
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET); 
+        console.log(decoded.role)
+        return decoded.role === "admin";  
+    } catch (error) {
+        return false;  
     }
-    next();
 };
+
 
 exports.verifyToken = async (req, res, next) => {
     try {

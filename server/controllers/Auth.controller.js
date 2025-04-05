@@ -1,10 +1,9 @@
 require('dotenv').config();
 const { Op } = require('sequelize');
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { User } = require("../database/index");
-const JWT_SECRET = process.env.JWT_SECRET || "default_secret"; // Ensure it's loaded
-
+const { authSchema, loginSchema } = require("../helpers/validation_schema.js");
+const { signToken } = require('../helpers/jwt_helper.js');
 // Cookie options
 const cookieOptions = {
     httpOnly: true,
@@ -12,72 +11,87 @@ const cookieOptions = {
 };
 
 // 🔹 Register User
+
 exports.register = async (req, res) => {
     try {
-        let { email, username, password } = req.body;
-        email = email.trim();
-        username = username.trim();
-        password = password.trim();
-
-        // Validate input
-        if (!email || !username || !password) {
-            return res.status(400).json({ error: 'All fields are required' });
-        } else if (!/^[a-zA-Z0-9]+$/.test(username)) {
-            return res.status(400).json({ error: 'Username can only contain letters and numbers' });
-        } else if (!/^[\w.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
-            return res.status(400).json({ error: 'Invalid email format' });
-        } else if (password.length < 8) {
-            return res.status(400).json({ error: 'Password must be at least 8 characters long' });
-        }
-
-        // Check if user exists
-        const existingUser = await User.findOne({
-            where: {
-                [Op.or]: [{ email }, { username }]
-            }
+      // 1. Validate input
+      const validatedData = await authSchema.validateAsync(req.body);
+  
+      // 2. Check for existing user by email or username
+      const existingUser = await User.findOne({
+        where: {
+          [Op.or]: [
+            { email: validatedData.email },
+            { username: validatedData.username },
+          ],
+        },
+      });
+  
+      if (existingUser) {
+        return res.status(409).json({
+          error: "Email or username already exists",
         });
-
-        if (existingUser) {
-            return res.status(400).json({ error: 'Email or username already exists' });
-        }
-
-        // Hash password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Create user
-        await User.create({ email, username, password: hashedPassword });
-
-        res.status(201).json({ message: 'User registered successfully' });
+      }
+  
+      // 3. Hash password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(validatedData.password, salt);
+  
+      // 4. Create user
+      const newUser = await User.create({
+        ...validatedData,
+        password: hashedPassword,
+      });
+  
+      // 5. Generate token
+      const token = signToken(newUser.id);
+  
+      // 6. Optional: Set token as a cookie (for cookie-based auth)
+      res.cookie("token", token, { httpOnly: true});
+  
+      // 7. Return response
+      res.status(201).json({
+        message: "User registered successfully",
+        token,
+        user: {
+          id: newUser.id,
+          username: newUser.username,
+          email: newUser.email,
+        },
+      });
+  
     } catch (error) {
-        console.error('Registration error:', error);
-        res.status(500).json({ error: 'Error registering user' });
+      if (error.isJoi) {
+        return res.status(422).json({ error: error.details[0].message });
+      }
+  
+      console.error("Registration error:", error);
+      res.status(500).json({ error: "Error registering user" });
     }
-};
-
+  };
 // 🔹 Login User
 exports.login = async (req, res) => {
+    
     try {
-        let { identifier, password } = req.body;
-        if (!identifier || !password) {
-            return res.status(400).json({ error: 'Email/username and password are required' });
-        }
+        const result = await loginSchema.validateAsync(req.body)
+
         // Find user
         const user = await User.findOne({
             where: {
-                [Op.or]: [{ username: identifier }, { email: identifier }]
+                [Op.or]: [{ username: result.identifier }, { email: result.identifier }]
             }
         });
         if (!user) return res.status(401).json({ error: 'Invalid credentials' });
         // Check password
-        const validPassword = await bcrypt.compare(password, user.password);
+        const validPassword = await bcrypt.compare(result.password, user.password);
         if (!validPassword) return res.status(401).json({ error: 'Invalid credentials' });
         // Create token
-        const token = jwt.sign({ id: user.id, username: user.username, email: user.email }, JWT_SECRET, { expiresIn: '1h' });
+        const token = await signToken(user.id,user.role);
         // Set cookie
         res.cookie("token", token, cookieOptions);
         res.json({ message: 'Login successful' });
     } catch (error) {
-        console.error('Login error:', error);
+        // if (error.isJoi) error=createError.BadRequest('Invali') // Validation error
         res.status(500).json({ error: 'Error during login' });
     }
 };
