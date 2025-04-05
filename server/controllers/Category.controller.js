@@ -6,10 +6,12 @@ module.exports = {
         const category= await Category.findAll()
         res.json(category)
       }catch(error){
-   res.status(500).json(error)
-   
-      
-       
+        console.error('Database error:', error);
+        res.status(500).json({
+          message: 'Error fetching categories',
+          error: error.message,
+          stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
       }
     }
 

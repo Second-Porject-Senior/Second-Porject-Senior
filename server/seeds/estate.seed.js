@@ -16,7 +16,7 @@ const seedEstates = async () => {
         bathrooms: 1,
         bedrooms: 1,
         area: 45.0,
-        image_url: 'https://example.com/studio.jpg',
+        image_url: 'https://www.decorilla.com/online-decorating/wp-content/uploads/2023/07/Modern-small-studio-apartment-interior-design-by-Decorilla.jpg',
         category_id: categories.find(c => c.name === 'Studios and 1 Bedrooms').id,
       },
       {
