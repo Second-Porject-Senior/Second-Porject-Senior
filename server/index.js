@@ -10,6 +10,7 @@ const cors = require("cors");
 const userRoutes = require("./routes/User.routes.js");
 const authRoutes = require("./routes/Auth.routes.js");
 const categoryRoutes = require("./routes/Ctegory.routes.js");
+const contactRoutes = require("./routes/Contact.routes.js");
 
 App.use(express.json());
 App.use(cookieParser());
@@ -21,6 +22,7 @@ App.use(cors({
 App.use("/api/users", userRoutes);
 App.use("/api/auth", authRoutes);
 App.use("/api/category", categoryRoutes);
+App.use("/api/contact", contactRoutes);
 
 App.listen(port, () => {
   console.log(`App listening on http://127.0.0.1:${port}`);
