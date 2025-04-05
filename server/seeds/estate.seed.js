@@ -27,7 +27,7 @@ const seedEstates = async () => {
         bathrooms: 2,
         bedrooms: 3,
         area: 120.0,
-        image_url: 'https://example.com/apartment.jpg',
+        image_url: 'https://i.pinimg.com/originals/24/e8/f0/24e8f08ba83e34213572acbdb1061bf0.jpg',
         category_id: categories.find(c => c.name === 'Apartments').id,
       },
       {
