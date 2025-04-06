@@ -17,10 +17,7 @@ const categoryRoutes = require("./routes/Ctegory.routes.js");
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
-  origin: 'http://localhost:5173', // your React app's URL
-  credentials: true
-}));
+app.use(cors());
 
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
