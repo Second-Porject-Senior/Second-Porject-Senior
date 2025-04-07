@@ -13,8 +13,11 @@ const port = process.env.SERVER_PORT || 3000;
 
 const userRoutes = require("./routes/User.routes.js");
 const authRoutes = require("./routes/Auth.routes.js");
+
 const categoryRoutes = require("./routes/Category.routes.js");
+const contactRoutes = require("./routes/Contact.routes.js");
 const estateRoutes = require("./routes/Estate.routes.js");
+
 
 app.use(express.json());
 app.use(cookieParser());
@@ -24,6 +27,9 @@ app.use(cors({
 }));
 
 
+
+
+app.use("/api/contact", contactRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/category", categoryRoutes);
