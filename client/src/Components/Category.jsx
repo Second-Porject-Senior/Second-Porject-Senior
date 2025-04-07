@@ -28,7 +28,7 @@ function Category() {
   }, []);
 
   const handleViewAllClick = () => {
-    navigate('/properties');
+    navigate('/estate');
   };
 
   const handleCategoryClick = (id) => {

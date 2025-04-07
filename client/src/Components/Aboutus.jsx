@@ -1,7 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import '../css/AboutUs.css';
 
 const AboutUs = () => {
+ 
+
   return (
     <div className="about-us-container">
       <header className="about-header">
@@ -94,9 +97,11 @@ const AboutUs = () => {
       </section>
 
       <section className="cta-section">
-        <h2>Ready to Find Your Dream Property?</h2>
-        <button  className="cta-button">Browse Our Listings</button>
-      </section>
+  <h2>Ready to Find Your Dream Property?</h2>
+  <Link to="/estate">
+    <button className="cta-button">Browse Our Listings</button>
+  </Link>
+</section>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Navbar from "./Components/Nav.jsx";
+import Navbar from "./Layouts/Nav.jsx";
 import Home from "./Components/Home.jsx";
 import Estate from "./Components/Estate.jsx"
 import EstateDetails from "./Components/EstateDetails.jsx";
