@@ -1,8 +1,9 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
-import Navbar from "./Layouts/Nav.jsx";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Navbar from "./Components/Nav.jsx";
 import Home from "./Components/Home.jsx";
-import ProfilePage from "./pages/ProfilePage.jsx"
+import Estate from "./Components/Estate.jsx"
+import EstateDetails from "./Components/EstateDetails.jsx";
 import "./css/Navbar.css";
 
 function App() {
@@ -12,7 +13,8 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/estate" element={<div>Estate Page</div>} />
+          <Route path="/estate" element={<Estate />} />
+          <Route path="/estate/:id" element={<EstateDetails />} />
           <Route path="/contact" element={<div>Contact Page</div>} />
           <Route path="/profile" element={<ProfilePage />} />
           

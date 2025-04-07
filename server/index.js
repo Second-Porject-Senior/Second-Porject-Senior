@@ -4,30 +4,29 @@ require ("dotenv").config({ path: "./utils/.env" });
 require("./database/index.js");
 const cookieParser = require('cookie-parser');
 const createError = require("http-errors");
-
+const cors = require("cors");
 
 const app = express();
  app.use(morgan("dev"));
 const port = process.env.SERVER_PORT || 3000;
-const cors = require("cors");
+
 
 const userRoutes = require("./routes/User.routes.js");
 const authRoutes = require("./routes/Auth.routes.js");
-const categoryRoutes = require("./routes/Ctegory.routes.js");
+const categoryRoutes = require("./routes/Category.routes.js");
+const estateRoutes = require("./routes/Estate.routes.js");
 
-app.use(express.json());
-app.use(cookieParser());
-app.use(cors(
-  {
-    origin: process.env.CLIENT_URL,
-    credentials: true, // Allow credentials (cookies) to be sent
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  }
-));
+App.use(express.json());
+App.use(cookieParser());
+App.use(cors({
+  origin: 'http://localhost:5173', // your React app's URL
+  credentials: true
+}));
 
-app.use("/api/users", userRoutes);
-app.use("/api/auth", authRoutes);
-app.use("/api/category", categoryRoutes);
+App.use("/api/users", userRoutes);
+App.use("/api/auth", authRoutes);
+App.use("/api/category", categoryRoutes);
+App.use("/api/estate", estateRoutes);
 
 app.use((req, res, next) => {
   next(createError.NotFound());

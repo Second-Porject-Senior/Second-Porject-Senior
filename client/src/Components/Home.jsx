@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import Category from './Category.jsx'
 import '../css/Home.css'
 
 function Home() {
@@ -13,7 +14,7 @@ function Home() {
                 </div>
               </div>
               
-              <main className="main-content">
+              {/* <main className="main-content">
                 <section className="content-section">
                   <h2>Featured Properties</h2>
                   <p>Explore our collection of carefully selected properties, each offering unique features and exceptional value. From modern urban apartments to spacious suburban homes, find the perfect property that suits your needs.</p>
@@ -28,7 +29,8 @@ function Home() {
                   <h2>Our Services</h2>
                   <p>We offer comprehensive real estate services including property valuation, market analysis, and personalized property tours. Our expert team ensures a smooth and efficient process from initial consultation to final closing.</p>
                 </section>
-              </main>
+              </main> */}
+              <Category />
     </div>
   )
 }
