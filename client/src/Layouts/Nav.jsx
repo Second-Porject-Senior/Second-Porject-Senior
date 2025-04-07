@@ -58,6 +58,7 @@ const Nav = () => {
                 }`}>Estate</Link>
               </li>
               <li className="nav-item">
+
                 <Link to="/contact" className={`nav-link ${
                   scrolled || isDarkPage ? 'text-dark' : 'text-white'
                 }`}>Contact</Link>
