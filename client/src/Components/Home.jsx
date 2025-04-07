@@ -1,6 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import Category from './Category.jsx'
+import FAQ from './FAQ.jsx'
+import Contactus from './Contactus.jsx'
 import '../css/Home.css'
 
 function Home() {
@@ -30,7 +32,11 @@ function Home() {
                   <p>We offer comprehensive real estate services including property valuation, market analysis, and personalized property tours. Our expert team ensures a smooth and efficient process from initial consultation to final closing.</p>
                 </section>
               </main> */}
+              
               <Category />
+
+              <FAQ />
+              <Contactus />
     </div>
   )
 }
