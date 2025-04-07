@@ -42,6 +42,7 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     width: 100%;
     max-width: 350px;
+    cursor: pointer; /* Add cursor pointer to show it's clickable */
   }
   
   .category-card:hover {
@@ -69,9 +70,9 @@
     margin-top: 0.5rem;
   }
   
+  /* We can remove the hover style for the name since the whole card is clickable now */
   .category-name:hover {
-    color:grey; /* Match the button color */
-    cursor: pointer;
+    color: #333; /* Keep the same color */
   }
 
   @media (max-width: 768px) {
