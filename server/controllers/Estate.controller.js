@@ -61,7 +61,10 @@ module.exports={
     },
     createEstate: async (req,res)=>{
         try {
-            const estate= await Estate.create(req.body)
+            const {title, description, price, location,bathrooms,bedrooms,area,category_id} = req.body
+            const estate= await Estate.create({
+                title, description, price, location,bathrooms,bedrooms,area,category_id
+            })
             res.status(201).json(estate)
 
         } catch (error) {
@@ -70,4 +73,24 @@ module.exports={
             
         }
     },
+    getEstatesByCategory: async (req, res) => {
+        try {
+            const { categoryId } = req.params;
+            console.log('Fetching estates for category ID:', categoryId);
+            
+            const estates = await Estate.findAll({
+                where: { category_id: categoryId }
+            });
+            
+            console.log(`Found ${estates.length} estates for category ID ${categoryId}`);
+            res.json(estates);
+        } catch (error) {
+            console.error('Error fetching estates by category:', error);
+            res.status(500).json({
+                message: 'Error fetching estates by category',
+                error: error.message
+            });
+        }
+    }
+
 }

@@ -40,10 +40,6 @@ module.exports=(sequelize,DataTypes)=>{
                         key: 'id'  
                     }},
             },
-            {
-                timestamps: false 
-              // Other model options go here
-            },
           );
           return Estate
     }
