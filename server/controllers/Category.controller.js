@@ -10,7 +10,6 @@ module.exports = {
         res.status(500).json({
           message: 'Error fetching categories',
           error: error.message,
-          stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
         });
       }
     }

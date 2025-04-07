@@ -63,25 +63,25 @@ function Category() {
       </button>
 
       <section className="category-grid">
-        {categories.map((category) => (
-          <div className="category-card" key={category.id || category._id}>
-            {category.img && (
-              <img
-                src={category.img}
-                className="category-img"
-                alt={category.name}
-              />
-            )}
-            <div className="category-body">
-              <h5
-                onClick={() => handleCategoryClick(category.id || category._id)}
-                className="category-name"
-              >
-                {category.name}
-              </h5>
-            </div>
-          </div>
-        ))}
+      {Array.isArray(categories) && categories.map((category) => (
+  <div className="category-card" key={category.id || category._id}>
+    {category.img && (
+      <img
+        src={category.img}
+        className="category-img"
+        alt={category.name}
+      />
+    )}
+    <div className="category-body">
+      <h5
+        onClick={() => handleCategoryClick(category.id || category._id)}
+        className="category-name"
+      >
+        {category.name}
+      </h5>
+    </div>
+  </div>
+))}
       </section>
     </div>
   );
