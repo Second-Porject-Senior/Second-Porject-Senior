@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../css/Category.css'; // Import the new CSS file
+import '../css/Category.css';
 
 function Category() {
   const navigate = useNavigate();
@@ -28,11 +28,11 @@ function Category() {
   }, []);
 
   const handleViewAllClick = () => {
-    navigate('/properties');
+    navigate('/estate');
   };
 
-  const handleCategoryClick = (id) => {
-    navigate(`/Category/${id}`);
+  const handleCategoryClick = (id, name) => {
+    navigate(`/estate?category=${id}&categoryName=${encodeURIComponent(name)}`);
   };
 
   if (loading) {
@@ -63,25 +63,23 @@ function Category() {
       </button>
 
       <section className="category-grid">
-      {Array.isArray(categories) && categories.map((category) => (
-  <div className="category-card" key={category.id || category._id}>
-    {category.img && (
-      <img
-        src={category.img}
-        className="category-img"
-        alt={category.name}
-      />
-    )}
-    <div className="category-body">
-      <h5
-        onClick={() => handleCategoryClick(category.id || category._id)}
-        className="category-name"
-      >
-        {category.name}
-      </h5>
-    </div>
-  </div>
-))}
+        {categories.map((category) => (
+          <div className="category-card" key={category.id || category._id}
+               onClick={() => handleCategoryClick(category.id || category._id, category.name)}>
+            {category.img && (
+              <img
+                src={category.img}
+                className="category-img"
+                alt={category.name}
+              />
+            )}
+            <div className="category-body">
+              <h5 className="category-name">
+                {category.name}
+              </h5>
+            </div>
+          </div>
+        ))}
       </section>
     </div>
   );

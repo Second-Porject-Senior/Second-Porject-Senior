@@ -13,21 +13,36 @@ const cookieOptions = {
 
 
 // Get current user info (based on token)
- module.exports.getCurrentUser = async (req, res) => {
+module.exports.getCurrentUser = async (req, res) => {
   try {
-    const userId = req.user.userId; // Token decoded by verifyToken middleware
-    const user = await User.findByPk(userId, {
-      attributes: ['id', 'name', 'email', 'profilePicture'], // Select only necessary fields
+    // If no authenticated user, return null without error
+    if (!req.user) {
+      return res.json(null);
+    }
+    
+    const user = await User.findByPk(req.user.id, {
+      attributes: ['id', 'username', 'email', 'pfp', 'role'], // Changed profilePicture to pfp
     });
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      console.log('No user found with ID:', req.user.id);
+      return res.json(null);
     }
 
-    res.json(user);
+    // Transform the response to match the expected format
+    const userResponse = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      profilePicture: user.pfp, // Map pfp to profilePicture for frontend compatibility
+      role: user.role
+    };
+
+    res.json(userResponse);
   } catch (error) {
-    console.error('Error fetching user:', error);
-    res.status(500).json({ message: 'Server error' });
+    console.error('Error in getCurrentUser:', error);
+    console.error('Request user object:', req.user);
+    res.status(500).json({ message: 'Server error', details: error.message });
   }
 };
 
