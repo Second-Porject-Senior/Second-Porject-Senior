@@ -76,7 +76,7 @@ const Nav = () => {
                   >
                     {user.profilePicture ? (
                       <img
-                        src={user.profilePicture}
+                        src={user.profilePicture||user.pfp}
                         alt="Profile"
                         className="rounded-circle me-2"
                         style={{ width: '30px', height: '30px', objectFit: 'cover' }}

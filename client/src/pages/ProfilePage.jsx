@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../Contexts/Authcontext.jsx';
 import axios from 'axios';
 import '../css/ProfilePage.css';
@@ -18,6 +18,18 @@ const ProfilePage = () => {
   const [error, setError] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(0);
 
+  useEffect(() => {
+    // Sync formData with user state
+    setFormData({
+      username: user?.username || '',
+      email: user?.email || '',
+      role: user?.role || 'customer',
+      pfp: user?.pfp || user?.profilePicture,
+    });
+  }, [user]);
+
+  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -35,7 +47,7 @@ const ProfilePage = () => {
       setError(null);
     }
   };
- 
+
   const uploadToCloudinary = async (file) => {
     const formData = new FormData();
     formData.append('file', file);
@@ -55,7 +67,6 @@ const ProfilePage = () => {
           },
         }
       );
-      user.pfp = response.data.secure_url; // Update the user object with the new profile picture URL
       return response.data.secure_url;
     } catch (error) {
       console.error('Error uploading to Cloudinary:', error);
@@ -66,37 +77,45 @@ const ProfilePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+  
     try {
-        let profilePicture = user.pfp;
-
-        if (formData.pfp) {
-            profilePicture = await uploadToCloudinary(formData.pfp);
+      let profilePicture = user.pfp;
+  
+      if (formData.pfp) {
+        profilePicture = await uploadToCloudinary(formData.pfp);
+      }
+  
+      const updatedData = {
+        username: formData.username,
+        email: formData.email,
+        role: formData.role,
+        pfp: profilePicture,
+      };
+  
+      const response = await axios.put(
+        `http://localhost:3000/api/users/${user.id}`,
+        updatedData,
+        {
+          headers: { 'Content-Type': 'application/json' },
         }
-
-        const updatedData = {
-            username: formData.username,
-            email: formData.email,
-            role: user.role === 'admin' ? formData.role : undefined,
-            pfp: profilePicture, // Include the profile picture URL
-        };
-
-        const response = await axios.put(
-            `http://localhost:3000/api/users/${user.id}`,
-            updatedData,
-            {
-                headers: { 'Content-Type': 'application/json' },
-            }
-        );
-
-        setUser(response.data); // Update the user in the frontend
-        setError(null);
+      );
+  
+      setUser({
+        ...response.data,
+        pfp: profilePicture,  // Ensure the updated profile picture is reflected
+      });
+      setError(null);
     } catch (err) {
-        setError(err.response?.data?.message || 'Error updating profile');
+      setError(err.response?.data?.message || 'Error updating profile');
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
+  
+  
+
+
+  console.log(user)
 
   return (
     <div className="profile-page bg-light min-vh-100">
@@ -106,9 +125,9 @@ const ProfilePage = () => {
             <div className="card shadow-lg border-0">
               <div className="card-body p-5">
                 <div className="text-center mb-4">
-                  {user?.profilePicture ? (
+                  {user?.profilePicture || user?.pfp ? (
                     <img
-                      src={user.profilePicture}
+                      src={user?.profilePicture || user?.pfp}
                       alt="Profile"
                       className="rounded-circle profile-picture mb-3"
                     />
