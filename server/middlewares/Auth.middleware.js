@@ -28,3 +28,13 @@ exports.verifyToken = async (req, res, next) => {
         return res.status(401).json({ message: "Invalid token", error: error.message });
     }
 };
+// 🔹 Register User
+exports.getUserData = (req, res) => {
+    // Assuming `req.user` contains the user info after `verifyToken` middleware
+    res.json({
+        id: req.user.id,
+        username: req.user.username,
+        profilePicture: req.user.profilePicture || null
+      });
+      
+};

@@ -17,7 +17,13 @@ const categoryRoutes = require("./routes/Ctegory.routes.js");
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors(
+  {
+    origin: process.env.CLIENT_URL,
+    credentials: true, // Allow credentials (cookies) to be sent
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  }
+));
 
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);

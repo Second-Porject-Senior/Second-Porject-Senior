@@ -7,6 +7,10 @@
 body {
   overflow-x: hidden;
   width: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.5;
+  background-color: #fff;
+  color: #333;
 }
 
 .home-container {
@@ -26,7 +30,6 @@ body {
   display: flex;
   align-items: center;
   padding: 0 5%;
-  margin: 0;
 }
 
 .hero-section::before {
@@ -38,49 +41,53 @@ body {
   bottom: 0;
   background: linear-gradient(
     to bottom,
-    rgba(0, 0, 0, 0.5) 0%,
-    rgba(0, 0, 0, 0.3) 100%
+    rgba(0, 0, 0, 0.6) 0%,
+    rgba(0, 0, 0, 0.4) 100%
   );
+  z-index: 0;
 }
 
 .hero-content {
   position: relative;
   z-index: 1;
   max-width: 800px;
-  color: white;
+  color: #fff;
 }
 
 .hero-content h1 {
   font-size: 3.5rem;
   margin-bottom: 1.5rem;
   font-weight: 700;
+  line-height: 1.2;
 }
 
 .hero-content p {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   margin-bottom: 2rem;
-  line-height: 1.6;
+  line-height: 1.7;
+  color: #eee;
 }
 
 .cta-button {
   display: inline-block;
   background-color: #ffd700;
   color: #333;
-  padding: 1rem 2rem;
-  border-radius: 4px;
+  padding: 1rem 2.2rem;
+  border-radius: 6px;
   text-decoration: none;
   font-weight: 600;
-  transition: background-color 0.3s ease;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .cta-button:hover {
-  background-color: #ffed4a;
+  background-color: #ffec3d;
+  transform: translateY(-2px);
 }
 
 .main-content {
   padding: 5rem 5%;
   width: 100%;
-  overflow-x: hidden;
 }
 
 .content-section {
@@ -93,13 +100,48 @@ body {
 .content-section h2 {
   font-size: 2.5rem;
   margin-bottom: 1.5rem;
-  color: #333;
+  color: #222;
 }
 
 .content-section p {
-  font-size: 1.1rem;
-  line-height: 1.6;
-  color: #666;
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #555;
   max-width: 800px;
   margin: 0 auto;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .hero-content p {
+    font-size: 1.1rem;
+  }
+
+  .cta-button {
+    font-size: 0.95rem;
+    padding: 0.9rem 1.8rem;
+  }
+
+  .main-content {
+    padding: 3rem 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 2rem;
+  }
+
+  .hero-content p {
+    font-size: 1rem;
+  }
+
+  .cta-button {
+    font-size: 0.9rem;
+    padding: 0.8rem 1.5rem;
+  }
 }

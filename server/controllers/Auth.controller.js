@@ -10,9 +10,30 @@ const cookieOptions = {
     maxAge: 24 * 60 * 60 * 1000 // 1 day
 };
 
-// 🔹 Register User
 
-exports.register = async (req, res) => {
+
+// Get current user info (based on token)
+ module.exports.getCurrentUser = async (req, res) => {
+  try {
+    const userId = req.user.userId; // Token decoded by verifyToken middleware
+    const user = await User.findByPk(userId, {
+      attributes: ['id', 'name', 'email', 'profilePicture'], // Select only necessary fields
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+
+module.exports.register = async (req, res) => {
     try {
       // 1. Validate input
       const validatedData = await authSchema.validateAsync(req.body);
@@ -70,7 +91,7 @@ exports.register = async (req, res) => {
     }
   };
 // 🔹 Login User
-exports.login = async (req, res) => {
+module.exports.login = async (req, res) => {
     
     try {
         const result = await loginSchema.validateAsync(req.body)
