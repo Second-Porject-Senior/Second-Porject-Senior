@@ -2,13 +2,19 @@ const express = require("express");
 const morgan = require("morgan");
 require ("dotenv").config({ path: "./utils/.env" });
 require("./database/index.js");
+const cors = require("cors");
 const cookieParser = require('cookie-parser');
 const createError = require("http-errors");
-const cors = require("cors");
+
+var path= require('path');
+const paymentRouter = require("./routes/payment");
 
 const app = express();
  app.use(morgan("dev"));
 const port = process.env.SERVER_PORT || 3000;
+app.use(morgan('dev'))
+app.use(express.urlencoded({extended:false}))
+app.use(express.static(path.join(__dirname,'public')))
 
 
 const userRoutes = require("./routes/User.routes.js");
@@ -28,7 +34,7 @@ app.use(cors({
 
 
 
-
+app.use("/api", paymentRouter)
 app.use("/api/contact", contactRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
@@ -51,3 +57,5 @@ app.use((err, req, res, next) => {
 app.listen(port, () => {
   console.log(`app listening on http://127.0.0.1:${port}`);
 });
+
+module.exports= app;
