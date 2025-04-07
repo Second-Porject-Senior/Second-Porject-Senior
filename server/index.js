@@ -13,13 +13,12 @@ const port = process.env.SERVER_PORT || 3000;
 
 const userRoutes = require("./routes/User.routes.js");
 const authRoutes = require("./routes/Auth.routes.js");
-<<<<<<< HEAD
+
 const categoryRoutes = require("./routes/Ctegory.routes.js");
 const contactRoutes = require("./routes/Contact.routes.js");
-=======
-const categoryRoutes = require("./routes/Category.routes.js");
+
 const estateRoutes = require("./routes/Estate.routes.js");
->>>>>>> 58f5f3da6a048b3c544ee2cbb8168b36ca9c1ca8
+
 
 app.use(express.json());
 app.use(cookieParser());
@@ -28,14 +27,8 @@ app.use(cors({
   credentials: true, // allow cookies to be sent
 }));
 
-<<<<<<< HEAD
-App.use("/api/users", userRoutes);
-App.use("/api/auth", authRoutes);
-App.use("/api/category", categoryRoutes);
-App.use("/api/contact", contactRoutes);
-=======
->>>>>>> 58f5f3da6a048b3c544ee2cbb8168b36ca9c1ca8
 
+app.use("/api/contact", contactRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/category", categoryRoutes);
