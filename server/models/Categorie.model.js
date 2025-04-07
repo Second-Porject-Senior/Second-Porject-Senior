@@ -6,7 +6,11 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.STRING,
                 allowNull: false,
                 unique: true,
-            }
+            },
+            img: {
+                type: DataTypes.STRING,
+                allowNull: true,
+            },
         },
         {
             tableName: 'categories',

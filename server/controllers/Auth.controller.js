@@ -1,126 +1,124 @@
 require('dotenv').config();
 const { Op } = require('sequelize');
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { User } = require("../database/index");
-const JWT_SECRET = process.env.JWT_SECRET;
-
+const { authSchema, loginSchema } = require("../helpers/validation_schema.js");
+const { signToken } = require('../helpers/jwt_helper.js');
 // Cookie options
 const cookieOptions = {
-    httpOnly: true, // Prevents JavaScript access to the cookie
-    secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-    sameSite: 'strict', // Protect against CSRF
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000 // 1 day
 };
 
-// Function to register a user
-exports.register = async (req, res) => {
-    let { email, username, password } = req.body;
-    email = email.trim();
-    username = username.trim();
-    password = password.trim();
 
-    // Validate input fields
-    if (!email || !username || !password) {
-        return res.status(400).json({ error: 'All fields are required' });
-    } else if (!/^[a-zA-Z0-9]+$/.test(username)) {
-        return res.status(400).json({ error: 'Username can only contain letters and numbers' });
-    } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
-        return res.status(400).json({ error: 'Invalid email format' });
-    } else if (password.length < 8) {
-        return res.status(400).json({ error: 'Password must be at least 8 characters long' });
+
+// Get current user info (based on token)
+ module.exports.getCurrentUser = async (req, res) => {
+  try {
+    const userId = req.user.userId; // Token decoded by verifyToken middleware
+    const user = await User.findByPk(userId, {
+      attributes: ['id', 'name', 'email', 'profilePicture'], // Select only necessary fields
+    });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
     }
 
+    res.json(user);
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+
+
+module.exports.register = async (req, res) => {
     try {
-        const existingEmail = await User.findOne({ where: { email } });
-        if (existingEmail) {
-            return res.status(400).json({ error: 'Email already exists' });
-        }
-        const existingUsername = await User.findOne({ where: { username } });
-        if (existingUsername) {
-            return res.status(400).json({ error: 'Username already exists' });
-        }
-
-        // Hash the password
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        // Create the user
-        const user = await User.create({
-            email,
-            username,
-            password: hashedPassword
+      // 1. Validate input
+      const validatedData = await authSchema.validateAsync(req.body);
+  
+      // 2. Check for existing user by email or username
+      const existingUser = await User.findOne({
+        where: {
+          [Op.or]: [
+            { email: validatedData.email },
+            { username: validatedData.username },
+          ],
+        },
+      });
+  
+      if (existingUser) {
+        return res.status(409).json({
+          error: "Email or username already exists",
         });
-
-        res.status(201).json({ message: 'User registered successfully' });
+      }
+  
+      // 3. Hash password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(validatedData.password, salt);
+  
+      // 4. Create user
+      const newUser = await User.create({
+        ...validatedData,
+        password: hashedPassword,
+      });
+  
+      // 5. Generate token
+      const token = signToken(newUser.id);
+  
+      // 6. Optional: Set token as a cookie (for cookie-based auth)
+      res.cookie("token", token, { httpOnly: true});
+  
+      // 7. Return response
+      res.status(201).json({
+        message: "User registered successfully",
+        token,
+        user: {
+          id: newUser.id,
+          username: newUser.username,
+          email: newUser.email,
+        },
+      });
+  
     } catch (error) {
-        console.error('Registration error:', error);
-        res.status(500).json({ error: 'Error registering user' });
+      if (error.isJoi) {
+        return res.status(422).json({ error: error.details[0].message });
+      }
+  
+      console.error("Registration error:", error);
+      res.status(500).json({ error: "Error registering user" });
     }
-};
-
-// Function to login a user
-exports.login = async (req, res) => {
-    const { identifier, password } = req.body;
-    identifier = identifier.trim();
-    password = password.trim();
-    // Validate input fields
-    if (!identifier || !password) {
-        return res.status(400).json({ error: 'All fields are required' });
-    }
+  };
+// 🔹 Login User
+module.exports.login = async (req, res) => {
+    
     try {
-        // Find the user by either username or email
+        const result = await loginSchema.validateAsync(req.body)
+
+        // Find user
         const user = await User.findOne({
             where: {
-                [Op.or]: [
-                    { username: identifier },
-                    { email: identifier }
-                ]
+                [Op.or]: [{ username: result.identifier }, { email: result.identifier }]
             }
         });
-
-        if (!user) {
-            return res.status(401).json({ error: 'Invalid credentials' });
-        }
-
+        if (!user) return res.status(401).json({ error: 'Invalid credentials' });
         // Check password
-        const validPassword = await bcrypt.compare(password, user.password);
-        if (!validPassword) {
-            return res.status(401).json({ error: 'Invalid credentials' });
-        }
-
-        // Create and sign JWT token
-        const token = jwt.sign(
-            { id: user.id, username: user.username },
-            JWT_SECRET,
-            { expiresIn: '15m' }
-        );
-
-        // Set the token in an HTTP-only cookie
-        res.cookie("token", token, {
-            httpOnly: true
-            //   ...cookieOptions,
-            //   maxAge: 15 * 60 * 1000 // 15 minutes
-        });
-
-        // Send response without including the token in the body
+        const validPassword = await bcrypt.compare(result.password, user.password);
+        if (!validPassword) return res.status(401).json({ error: 'Invalid credentials' });
+        // Create token
+        const token = await signToken(user.id,user.role);
+        // Set cookie
+        res.cookie("token", token, cookieOptions);
         res.json({ message: 'Login successful' });
     } catch (error) {
-        console.error('Login error:', error);
+        // if (error.isJoi) error=createError.BadRequest('Invali') // Validation error
         res.status(500).json({ error: 'Error during login' });
     }
 };
 
-// Function to logout
+// 🔹 Logout
 exports.logout = async (req, res) => {
-    try {
-        // Clear the token cookie
-        res.clearCookie('token', {
-            ...cookieOptions,
-            maxAge: 0
-        });
-        res.json({ message: 'Logged out successfully' });
-    } catch (error) {
-        console.error('Logout error:', error);
-        res.status(500).json({ error: 'Error during logout' });
-    }
+    res.clearCookie("token", { ...cookieOptions, maxAge: 0 });
+    res.json({ message: "Logged out successfully" });
 };

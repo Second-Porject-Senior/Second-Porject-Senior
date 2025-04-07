@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import '../css/Category.css'; // Import the new CSS file
 
 function Category() {
   const navigate = useNavigate();
@@ -27,7 +28,7 @@ function Category() {
   }, []);
 
   const handleViewAllClick = () => {
-    navigate("/properties");
+    navigate('/properties');
   };
 
   const handleCategoryClick = (id) => {
@@ -55,44 +56,35 @@ function Category() {
   }
 
   return (
-    <div className="container py-5">
-      <h1 className="text-center mb-4">Our Exclusive Sales Listings</h1>
-      <button onClick={handleViewAllClick} className="btn btn-primary btn-lg mb-4">
+    <div className="category-container">
+      <h1 className="category-title">Our Exclusive Sales Listings</h1>
+      <button onClick={handleViewAllClick} className="view-all-btn">
         View all properties
       </button>
 
-      <section>
-        <div className="row g-4">
-          {categories.map((category) => (
-            <div className="col-md-4" key={category.id || category._id}>
-              <div className="card h-100 text-center">
-                {category.img && (
-                  <img
-                    src={category.img}
-                    className="card-img-top"
-                    alt={category.name}
-                    style={{ height: "200px", objectFit: "cover" }}
-                  />
-                )}
-                <div className="card-body d-flex flex-column">
-                  <h5 
-                    onClick={() => handleCategoryClick(category.id || category._id)} 
-                    className="card-title"
-                    style={{ cursor: 'pointer' }}
-                  >
-                    {category.name}
-                  </h5>
-                </div>
-              </div>
+      <section className="category-grid">
+        {categories.map((category) => (
+          <div className="category-card" key={category.id || category._id}>
+            {category.img && (
+              <img
+                src={category.img}
+                className="category-img"
+                alt={category.name}
+              />
+            )}
+            <div className="category-body">
+              <h5
+                onClick={() => handleCategoryClick(category.id || category._id)}
+                className="category-name"
+              >
+                {category.name}
+              </h5>
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </section>
     </div>
   );
 }
 
 export default Category;
-
-
-
