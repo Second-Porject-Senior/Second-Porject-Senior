@@ -46,6 +46,7 @@
   color: #333;
 }
 
+/* Sign in button */
 .contact-btn {
   background-color: #ffd700;
   color: #333;
@@ -58,4 +59,77 @@
 
 .contact-btn:hover {
   background-color: #ffed4a;
+}
+
+/* Make buttons and spans styled like links (when needed) */
+.nav-link,
+.nav-link-button {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.navbar.scrolled .nav-link,
+.navbar.scrolled .nav-link-button {
+  color: #333;
+}
+
+/* Optional: space between nav items */
+.nav-links > * {
+  display: flex;
+  align-items: center;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-pfp {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.placeholder-pfp {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;  /* Same size as the user picture */
+  height: 40px; /* Same size as the user picture */
+  border-radius: 50%; /* Make it a circle */
+  background: linear-gradient(135deg, #ffcc70, #ffae00);  /* Gradient background */
+  color: white;  /* White text */
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+}
+
+
+
+
+
+/* Update the logout button */
+.nav-link-button {
+  background-color: #ffd700; /* Same as sign in button */
+  color: #333;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  border: none; /* Remove border */
+  cursor: pointer; /* Pointer on hover */
+}
+
+.nav-link-button:hover {
+  background-color: #ffed4a; /* Same hover effect as sign in */
 }
