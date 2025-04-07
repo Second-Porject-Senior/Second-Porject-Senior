@@ -1,9 +1,10 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Navbar from "./Components/Nav.jsx";
+import {Routes, Route } from "react-router-dom";
+import Navbar from "./Layouts/Nav.jsx";
 import Home from "./Components/Home.jsx";
 import Estate from "./Components/Estate.jsx"
 import EstateDetails from "./Components/EstateDetails.jsx";
+import ProfilePage from "./pages/ProfilePage.jsx";
 import "./css/Navbar.css";
 
 function App() {

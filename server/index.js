@@ -16,17 +16,18 @@ const authRoutes = require("./routes/Auth.routes.js");
 const categoryRoutes = require("./routes/Category.routes.js");
 const estateRoutes = require("./routes/Estate.routes.js");
 
-App.use(express.json());
-App.use(cookieParser());
-App.use(cors({
-  origin: 'http://localhost:5173', // your React app's URL
-  credentials: true
+app.use(express.json());
+app.use(cookieParser());
+app.use(cors({
+  origin: "http://localhost:3001", // your frontend's origin
+  credentials: true, // allow cookies to be sent
 }));
 
-App.use("/api/users", userRoutes);
-App.use("/api/auth", authRoutes);
-App.use("/api/category", categoryRoutes);
-App.use("/api/estate", estateRoutes);
+
+app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/category", categoryRoutes);
+app.use("/api/estate", estateRoutes);
 
 app.use((req, res, next) => {
   next(createError.NotFound());
