@@ -9,10 +9,14 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true,
-            validators: {
-                isEmail: true,
+            validate: {
+              isEmail: true,
             },
-        },
+            set(value) {
+              // Convert to lowercase before saving
+              this.setDataValue('email', value.toLowerCase());
+            },
+          },
         password: {
             type: DataTypes.STRING,
             allowNull: false,

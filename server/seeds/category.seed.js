@@ -25,7 +25,7 @@ const seedCategories = async () => {
   ];
 
   try {
-    await sequelize.sync({ force: false }); // Ensure the database is ready
+    await sequelize.sync({ alter: false }); // Ensure the database is ready
     await Category.bulkCreate(categories);
     console.log('Categories seeded successfully!');
   } catch (error) {

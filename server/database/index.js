@@ -4,11 +4,11 @@ const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = new Sequelize(
   process.env.DB_NAME || "realstate",
   process.env.DB_USER || "postgres",
-  process.env.DB_PASSWORD|| "postgres",
+  process.env.DB_PASSWORD || "postgres",
   {
-    host: process.env.DB_HOST|| "localhost",
+    host: process.env.DB_HOST || "localhost",
     port: process.env.DB_PORT || 5432,
-    dialect: process.env.DB_DIALECT|| "postgres",
+    dialect: process.env.DB_DIALECT || "postgres",
   }
 );
 
@@ -39,4 +39,4 @@ Estate.belongsTo(Category, { foreignKey: 'category_id' });
 //     console.error("Error synchronizing tables:", err);
 //   });
 
-module.exports = { sequelize, Estate, Category , User };
+module.exports = { sequelize, Estate, Category, User };
