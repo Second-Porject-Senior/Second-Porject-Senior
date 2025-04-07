@@ -1,43 +1,34 @@
 module.exports = (sequelize, DataTypes) => {
-    const contact = sequelize.define(
-        'contact',
+    const Contact = sequelize.define(
+        'Contact',
         {
             name: {
                 type: DataTypes.STRING,
                 allowNull: false,
-                unique: true,
-            }
-        },
-        {
+            
+            },
             email: {
                 type: DataTypes.STRING,
                 allowNull: false,
-                unique: true,
-            }
-        },
-        {
-            phonenumber: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-                unique: true,
-            }
-        },
-        {
-            adress : {
+          
+            },
+            message: {
                 type: DataTypes.STRING,
-                allowNull: false,
-                unique: true,
-            }
+               
+            },
+            phonenumber: {
+                type: DataTypes.STRING
+             
+            },
+            adress: {
+                type: DataTypes.STRING
+               
+            },
         },
-        {
-            message : {
-                type: DataTypes.Text,
-                allowNull: false,
-                unique: true,
-            }
-        },
-       
+     
     );
 
-    return contact;
+    return Contact;
 };
+// http://localhost:3000/api/contact/getall 
+// http://localhost:3000/api/contact/add 

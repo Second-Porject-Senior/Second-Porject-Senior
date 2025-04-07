@@ -29,6 +29,11 @@ const Contact = require('../models/Contactus.models')(sequelize, DataTypes);
 Category.hasMany(Estate, { foreignKey: 'category_id' });
 Estate.belongsTo(Category, { foreignKey: 'category_id' });
 
+// RELATION BETWEN USER AND CONTACT 
+User.hasMany(Contact, { foreignKey: 'user_id' });
+Contact.belongsTo(User, { foreignKey: 'user_id' });
+
+
 
 // sequelize
 //   .sync({ force: true })
@@ -40,4 +45,4 @@ Estate.belongsTo(Category, { foreignKey: 'category_id' });
 //     console.error("Error synchronizing tables:", err);
 //   });
 
-module.exports = { sequelize, Estate, Category, User };
+module.exports = { sequelize, Estate, Category, User , Contact};

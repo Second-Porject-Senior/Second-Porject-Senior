@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../css/Category.css'; // Import the new CSS file
+import '../css/Category.css';
 
 function Category() {
   const navigate = useNavigate();

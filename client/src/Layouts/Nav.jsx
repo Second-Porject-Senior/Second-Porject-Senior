@@ -46,7 +46,7 @@ const Nav = () => {
                 <Link to="/estate" className={`nav-link ${scrolled ? 'text-dark' : 'text-white'}`}>Estate</Link>
               </li>
               <li className="nav-item">
-                <Link to="/contact" className={`nav-link ${scrolled ? 'text-dark' : 'text-white'}`}>Contact</Link>
+                <Link to="/contact" className={`nav-link ${scrolled ? 'text-dark' : 'text-white'}`}>About Us</Link>
               </li>
               {user ? (
                 <li className="nav-item dropdown">
