@@ -3,16 +3,20 @@ import { useAuth } from '../Contexts/Authcontext.jsx';
 import axios from 'axios';
 import '../css/ProfilePage.css';
 
+const CLOUDINARY_UPLOAD_PRESET = 'DARNAAA';
+const CLOUDINARY_CLOUD_NAME = 'dc3rbhdae';
+
 const ProfilePage = () => {
   const { user, setUser } = useAuth();
   const [formData, setFormData] = useState({
     username: user?.username || '',
     email: user?.email || '',
     role: user?.role || 'customer',
-    pfp: null,
+    pfp: user?.pfp || null,
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,35 +24,79 @@ const ProfilePage = () => {
   };
 
   const handleFileChange = (e) => {
-    setFormData({ ...formData, pfp: e.target.files[0] });
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        // 5MB limit
+        setError('File size too large. Please choose an image under 5MB.');
+        return;
+      }
+      setFormData({ ...formData, pfp: file });
+      setError(null);
+    }
+  };
+ 
+  const uploadToCloudinary = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+
+    try {
+      const response = await axios.post(
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
+        formData,
+        {
+          headers: { 'Content-Type': 'multipart/form-data' },
+          onUploadProgress: (progressEvent) => {
+            const progress = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setUploadProgress(progress);
+          },
+        }
+      );
+      user.pfp = response.data.secure_url; // Update the user object with the new profile picture URL
+      return response.data.secure_url;
+    } catch (error) {
+      console.error('Error uploading to Cloudinary:', error);
+      throw new Error('Failed to upload image');
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
-      const updatedData = {
-        username: formData.username,
-        email: formData.email,
-        role: user.role === 'admin' ? formData.role : undefined,
-      };
+        let profilePicture = user.pfp;
 
-      const response = await axios.put(
-        `http://localhost:3000/api/users/${user.id}`,
-        updatedData,
-        {
-          headers: { 'Content-Type': 'application/json' },
+        if (formData.pfp) {
+            profilePicture = await uploadToCloudinary(formData.pfp);
         }
-      );
 
-      setUser(response.data);
-      setError(null);
+        const updatedData = {
+            username: formData.username,
+            email: formData.email,
+            role: user.role === 'admin' ? formData.role : undefined,
+            pfp: profilePicture, // Include the profile picture URL
+        };
+
+        const response = await axios.put(
+            `http://localhost:3000/api/users/${user.id}`,
+            updatedData,
+            {
+                headers: { 'Content-Type': 'application/json' },
+            }
+        );
+
+        setUser(response.data); // Update the user in the frontend
+        setError(null);
     } catch (err) {
-      setError('Error updating profile');
+        setError(err.response?.data?.message || 'Error updating profile');
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
 
   return (
     <div className="profile-page bg-light min-vh-100">
@@ -71,7 +119,7 @@ const ProfilePage = () => {
                   )}
                   <h2 className="fw-bold text-dark">Update Profile</h2>
                 </div>
-                
+
                 {error && (
                   <div className="alert alert-danger" role="alert">
                     {error}
@@ -80,7 +128,10 @@ const ProfilePage = () => {
 
                 <form onSubmit={handleSubmit}>
                   <div className="mb-4">
-                    <label htmlFor="username" className="form-label fw-semibold text-dark">
+                    <label
+                      htmlFor="username"
+                      className="form-label fw-semibold text-dark"
+                    >
                       Username
                     </label>
                     <input
@@ -95,7 +146,10 @@ const ProfilePage = () => {
                   </div>
 
                   <div className="mb-4">
-                    <label htmlFor="email" className="form-label fw-semibold text-dark">
+                    <label
+                      htmlFor="email"
+                      className="form-label fw-semibold text-dark"
+                    >
                       Email
                     </label>
                     <input
@@ -111,7 +165,10 @@ const ProfilePage = () => {
 
                   {user.role === 'admin' && (
                     <div className="mb-4">
-                      <label htmlFor="role" className="form-label fw-semibold text-dark">
+                      <label
+                        htmlFor="role"
+                        className="form-label fw-semibold text-dark"
+                      >
                         Role
                       </label>
                       <select
@@ -128,7 +185,10 @@ const ProfilePage = () => {
                   )}
 
                   <div className="mb-4">
-                    <label htmlFor="pfp" className="form-label fw-semibold text-dark">
+                    <label
+                      htmlFor="pfp"
+                      className="form-label fw-semibold text-dark"
+                    >
                       Profile Picture
                     </label>
                     <input
@@ -140,9 +200,26 @@ const ProfilePage = () => {
                       accept="image/*"
                     />
                     <small className="text-muted d-block mt-1">
-                      Recommended size: 200x200 pixels
+                      Maximum file size: 5MB. Recommended size: 200x200 pixels
                     </small>
                   </div>
+
+                  {uploadProgress > 0 && uploadProgress < 100 && (
+                    <div className="mb-4">
+                      <div className="progress">
+                        <div
+                          className="progress-bar bg-warning"
+                          role="progressbar"
+                          style={{ width: `${uploadProgress}%` }}
+                          aria-valuenow={uploadProgress}
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        >
+                          {uploadProgress}%
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   <button
                     type="submit"
@@ -151,8 +228,12 @@ const ProfilePage = () => {
                   >
                     {loading ? (
                       <>
-                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                        Updating...
+                        <span
+                          className="spinner-border spinner-border-sm me-2"
+                          role="status"
+                          aria-hidden="true"
+                        ></span>
+                        {uploadProgress > 0 ? 'Uploading...' : 'Updating...'}
                       </>
                     ) : (
                       'Update Profile'
