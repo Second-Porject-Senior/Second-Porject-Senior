@@ -26,5 +26,24 @@ module.exports={
             res.status(500).json({message: 'Error fetching estate',error: error.message,});
             
         }
+    },
+    getEstatesByCategory: async (req, res) => {
+        try {
+            const { categoryId } = req.params;
+            console.log('Fetching estates for category ID:', categoryId);
+            
+            const estates = await Estate.findAll({
+                where: { category_id: categoryId }
+            });
+            
+            console.log(`Found ${estates.length} estates for category ID ${categoryId}`);
+            res.json(estates);
+        } catch (error) {
+            console.error('Error fetching estates by category:', error);
+            res.status(500).json({
+                message: 'Error fetching estates by category',
+                error: error.message
+            });
+        }
     }
 }

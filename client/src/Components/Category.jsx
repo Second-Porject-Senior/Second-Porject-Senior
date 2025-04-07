@@ -31,8 +31,8 @@ function Category() {
     navigate('/estate');
   };
 
-  const handleCategoryClick = (id) => {
-    navigate(`/Category/${id}`);
+  const handleCategoryClick = (id, name) => {
+    navigate(`/estate?category=${id}&categoryName=${encodeURIComponent(name)}`);
   };
 
   if (loading) {
@@ -64,7 +64,8 @@ function Category() {
 
       <section className="category-grid">
         {categories.map((category) => (
-          <div className="category-card" key={category.id || category._id}>
+          <div className="category-card" key={category.id || category._id}
+               onClick={() => handleCategoryClick(category.id || category._id, category.name)}>
             {category.img && (
               <img
                 src={category.img}
@@ -73,10 +74,7 @@ function Category() {
               />
             )}
             <div className="category-body">
-              <h5
-                onClick={() => handleCategoryClick(category.id || category._id)}
-                className="category-name"
-              >
+              <h5 className="category-name">
                 {category.name}
               </h5>
             </div>
