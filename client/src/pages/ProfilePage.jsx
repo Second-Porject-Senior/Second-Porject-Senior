@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../Contexts/Authcontext.jsx';
 import axios from 'axios';
+import '../css/ProfilePage.css';
 
 const ProfilePage = () => {
   const { user, setUser } = useAuth();
@@ -50,113 +51,117 @@ const ProfilePage = () => {
   };
 
   return (
-    <div
-      className="pt-5"
-      style={{
-        paddingTop: '120px',
-        minHeight: '100vh',
-        backgroundColor: '#121212',
-        color: '#e0e0e0',
-      }}
-    >
-      <div className="container">
-        <div
-          className="card shadow-lg p-4"
-          style={{
-            maxWidth: '600px',
-            margin: '0 auto',
-            borderRadius: '1rem',
-            backgroundColor: '#1e1e1e',
-            border: '1px solid #333',
-            paddingTop: '2rem', // Adding more space at the top
-          }}
-        >
-          <h2 className="text-center mb-4 fw-bold" style={{ color: '#f0c040' }}>
-            Update Profile
-          </h2>
-          {error && <div className="alert alert-danger">{error}</div>}
-          <form onSubmit={handleSubmit}>
-            <div className="mb-3">
-              <label
-                htmlFor="username"
-                className="form-label fw-bold"
-                style={{ color: '#f0c040' }} // Making the label text more visible
-              >
-                Username
-              </label>
-              <input
-                type="text"
-                id="username"
-                name="username"
-                className="form-control bg-dark text-light border-secondary"
-                value={formData.username}
-                onChange={handleChange}
-                required
-              />
-            </div>
+    <div className="profile-page bg-light min-vh-100">
+      <div className="container py-5">
+        <div className="row justify-content-center">
+          <div className="col-md-8 col-lg-6">
+            <div className="card shadow-lg border-0">
+              <div className="card-body p-5">
+                <div className="text-center mb-4">
+                  {user?.profilePicture ? (
+                    <img
+                      src={user.profilePicture}
+                      alt="Profile"
+                      className="rounded-circle profile-picture mb-3"
+                    />
+                  ) : (
+                    <div className="profile-picture-placeholder mb-3">
+                      {user?.username?.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <h2 className="fw-bold text-dark">Update Profile</h2>
+                </div>
+                
+                {error && (
+                  <div className="alert alert-danger" role="alert">
+                    {error}
+                  </div>
+                )}
 
-            <div className="mb-3">
-              <label
-                htmlFor="email"
-                className="form-label fw-bold"
-                style={{ color: '#f0c040' }} // Making the label text more visible
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                className="form-control bg-dark text-light border-secondary"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-            </div>
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-4">
+                    <label htmlFor="username" className="form-label fw-semibold text-dark">
+                      Username
+                    </label>
+                    <input
+                      type="text"
+                      id="username"
+                      name="username"
+                      className="form-control form-control-lg"
+                      value={formData.username}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
 
-            {user.role === 'admin' && (
-              <div className="mb-3">
-                <label
-                  htmlFor="role"
-                  className="form-label fw-bold"
-                  style={{ color: '#f0c040' }} // Making the label text more visible
-                >
-                  Role
-                </label>
-                <select
-                  id="role"
-                  name="role"
-                  className="form-select bg-dark text-light border-secondary"
-                  value={formData.role}
-                  onChange={handleChange}
-                >
-                  <option value="customer">Customer</option>
-                  <option value="admin">Admin</option>
-                </select>
+                  <div className="mb-4">
+                    <label htmlFor="email" className="form-label fw-semibold text-dark">
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      className="form-control form-control-lg"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+
+                  {user.role === 'admin' && (
+                    <div className="mb-4">
+                      <label htmlFor="role" className="form-label fw-semibold text-dark">
+                        Role
+                      </label>
+                      <select
+                        id="role"
+                        name="role"
+                        className="form-select form-select-lg"
+                        value={formData.role}
+                        onChange={handleChange}
+                      >
+                        <option value="customer">Customer</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                    </div>
+                  )}
+
+                  <div className="mb-4">
+                    <label htmlFor="pfp" className="form-label fw-semibold text-dark">
+                      Profile Picture
+                    </label>
+                    <input
+                      type="file"
+                      id="pfp"
+                      name="pfp"
+                      className="form-control form-control-lg"
+                      onChange={handleFileChange}
+                      accept="image/*"
+                    />
+                    <small className="text-muted d-block mt-1">
+                      Recommended size: 200x200 pixels
+                    </small>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="btn btn-warning btn-lg w-100 fw-bold text-dark"
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        Updating...
+                      </>
+                    ) : (
+                      'Update Profile'
+                    )}
+                  </button>
+                </form>
               </div>
-            )}
-
-            <div className="mb-3">
-              <label
-                htmlFor="pfp"
-                className="form-label fw-bold"
-                style={{ color: '#f0c040' }} // Making the label text more visible
-              >
-                Profile Picture
-              </label>
-              <input
-                type="file"
-                id="pfp"
-                name="pfp"
-                className="form-control bg-dark text-light border-secondary"
-                onChange={handleFileChange}
-              />
             </div>
-
-            <button type="submit" className="btn btn-warning w-100 fw-bold" disabled={loading}>
-              {loading ? 'Updating...' : 'Update Profile'}
-            </button>
-          </form>
+          </div>
         </div>
       </div>
     </div>

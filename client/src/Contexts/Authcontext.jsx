@@ -23,6 +23,10 @@ export const AuthProvider = ({ children }) => {
       const { data } = await api.get('/auth/me');
       setUser(data);
     } catch (error) {
+      // Only log errors that aren't 401 unauthorized
+      if (error.response?.status !== 401) {
+        console.error('Error fetching user:', error);
+      }
       setUser(null);
     }
   };
