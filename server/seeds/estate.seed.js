@@ -77,7 +77,7 @@ const seedEstates = async () => {
     ];
 
     // Seed estates into the database
-    await sequelize.sync({ force: false }); // Ensure the database is ready
+    await sequelize.sync({ alter: false }); // Ensure the database is ready
     await Estate.bulkCreate(estates);
     console.log('Estates seeded successfully!');
   } catch (error) {

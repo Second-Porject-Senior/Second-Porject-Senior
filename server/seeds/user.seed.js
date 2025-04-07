@@ -25,7 +25,7 @@ const seedUsers = async () => {
   ];
 
   try {
-    await sequelize.sync({ force: false }); // Ensure the database is ready
+    await sequelize.sync({ alter: false }); // Ensure the database is ready
     await User.bulkCreate(users);
     console.log('Users seeded successfully!');
   } catch (error) {
