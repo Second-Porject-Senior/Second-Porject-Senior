@@ -42,7 +42,7 @@ module.exports = {
     static: {
       directory: path.join(__dirname, 'public'),
     },
-    port: 5000,
+    port: 3001,
     hot: true,
     historyApiFallback: {
       disableDotRule: true,
