@@ -6,17 +6,31 @@ import '../css/Home.css'
 function Home() {
   return (
     <div className="home-container">
-      <div className="hero-section position-relative vh-100 d-flex align-items-center">
-        <div className="hero-overlay position-absolute top-0 start-0 w-100 h-100"></div>
-        <div className="container position-relative z-1">
-          <div className="hero-content text-white">
-            <h1 className="display-3 fw-bold mb-4">Discover Your Dream Home</h1>
-            <p className="lead mb-4">Experience luxury living with our handpicked selection of premium properties. Find the perfect space that matches your lifestyle and aspirations.</p>
-            <Link to="/estate" className="btn btn-primary btn-lg">View Properties</Link>
-          </div>
-        </div>
-      </div>
-      <Category />
+           <div className="hero-section">
+                <div className="hero-content">
+                  <h1>Discover Your Dream Home</h1>
+                  <p>Experience luxury living with our handpicked selection of premium properties. Find the perfect space that matches your lifestyle and aspirations.</p>
+                  <Link to="/estate" className="cta-button">View Properties</Link>
+                </div>
+              </div>
+              
+              {/* <main className="main-content">
+                <section className="content-section">
+                  <h2>Featured Properties</h2>
+                  <p>Explore our collection of carefully selected properties, each offering unique features and exceptional value. From modern urban apartments to spacious suburban homes, find the perfect property that suits your needs.</p>
+                </section>
+        
+                <section className="content-section">
+                  <h2>Why Choose Us</h2>
+                  <p>With years of experience in the real estate market, we pride ourselves on offering personalized service and expert guidance throughout your property journey. Our team of professionals is dedicated to helping you make informed decisions and finding the perfect property match.</p>
+                </section>
+        
+                <section className="content-section">
+                  <h2>Our Services</h2>
+                  <p>We offer comprehensive real estate services including property valuation, market analysis, and personalized property tours. Our expert team ensures a smooth and efficient process from initial consultation to final closing.</p>
+                </section>
+              </main> */}
+              <Category />
     </div>
   )
 }
