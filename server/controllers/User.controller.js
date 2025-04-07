@@ -1,3 +1,4 @@
+const { where } = require('sequelize');
 const { User } = require('../database/index.js');
 const { isAdmin } = require('../middlewares/Auth.middleware.js');
 
@@ -47,18 +48,32 @@ const UserController = {
     // Update a user by ID
     updateUser: async (req, res) => {
         try {
-            const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
-                new: true,
-                runValidators: true,
-            });
-            if (!updatedUser) {
+            const userId = req.params.id;
+    
+            // Check if the user exists before updating
+            const user = await User.findByPk(userId);  // `findByPk` is the correct Sequelize method
+            if (!user) {
                 return res.status(404).json({ message: 'User not found' });
             }
-            res.status(200).json(updatedUser);
+    
+            // Proceed with the update
+            const updatedUser = await User.update(req.body, {
+                where: { id: userId },
+                returning: true,  // This ensures that the updated user data is returned
+                plain: true,      // This ensures that a single object is returned instead of an array
+            });
+    
+            if (updatedUser[0] === 0) {
+                return res.status(400).json({ message: 'No changes made' });  // No rows updated
+            }
+    
+            res.status(200).json(updatedUser[1]);  // Return the updated user data
         } catch (error) {
-            res.status(500).json({ message: 'Error updating user', error });
+            console.error('Error updating user:', error);
+            res.status(500).json({ message: 'Error updating user', error: error.message });
         }
     },
+    
 
 
     // Delete a user by ID
