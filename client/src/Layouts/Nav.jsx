@@ -59,9 +59,9 @@ const Nav = () => {
               </li>
               <li className="nav-item">
 
-                <Link to="/contact" className={`nav-link ${
+                <Link to="/about" className={`nav-link ${
                   scrolled || isDarkPage ? 'text-dark' : 'text-white'
-                }`}>Contact</Link>
+                }`}>About us</Link>
               </li>
               {user ? (
                 <li className="nav-item dropdown">

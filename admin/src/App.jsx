@@ -7,7 +7,7 @@ import DashboardPage from "@/routes/dashboard/page";
 import AllEstates from "./components/AllEstates.jsx";
 import AddEstate from "./components/AddEstate.jsx";
 import Customers from "./components/Customers.jsx";
-
+import Msg from './components/msg.jsx'; 
 function App() {
     const router = createBrowserRouter([
         {
@@ -29,6 +29,10 @@ function App() {
                 {
                     path: "customers",
                     element: <Customers />,
+                },
+                {
+                    path: "messages",
+                    element: <Msg/>,
                 }
             ],
         },
