@@ -59,9 +59,9 @@ const Nav = () => {
               </li>
               <li className="nav-item">
 
-                <Link to="/contact" className={`nav-link ${
+                <Link to="/about" className={`nav-link ${
                   scrolled || isDarkPage ? 'text-dark' : 'text-white'
-                }`}>Contact</Link>
+                }`}>About Us</Link>
               </li>
               {user ? (
                 <li className="nav-item dropdown">
@@ -100,7 +100,7 @@ const Nav = () => {
                     </li>
                     {user.role === 'admin' && (
                       <li>
-                        <Link to="/admin" className="dropdown-item">
+                        <Link to="http://localhost:3005" className="dropdown-item">
                           <i className="bi bi-gear-fill me-2"></i>Admin Dashboard
                         </Link>
                       </li>
