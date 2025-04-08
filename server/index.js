@@ -28,7 +28,7 @@ const estateRoutes = require("./routes/Estate.routes.js");
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-  origin: "http://localhost:3001", // your frontend's origin
+  origin: ["http://localhost:3001", "http://localhost:3005"],// your frontend's origin
   credentials: true, // allow cookies to be sent
 }));
 

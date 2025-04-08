@@ -11,13 +11,13 @@ const seedUsers = async () => {
       role: 'admin',
     },
     {
-      username: 'user1',
+      username: 'Rayen',
       email: 'user1@example.com',
       password: await bcrypt.hash('password123', 10), // Hash the password
       role: 'customer',
     },
     {
-      username: 'user2',
+      username: 'habiba',
       email: 'user2@example.com',
       password: await bcrypt.hash('password123', 10), // Hash the password
       role: 'customer',

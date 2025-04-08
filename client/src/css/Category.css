@@ -75,12 +75,12 @@
 }
 
 @media (max-width: 768px) {
-  .category-grid
+  .category-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 3 items per row */
     gap: 2rem; /* Space between items */
-    justify-items: center;
   }
+
   
   .category-card {
     background-color: white;

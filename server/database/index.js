@@ -34,7 +34,6 @@ User.hasMany(Contact, { foreignKey: 'user_id' });
 Contact.belongsTo(User, { foreignKey: 'user_id' });
 
 
-
 // sequelize
 //   .sync({ force: true })
 //   .then(async () => {
@@ -44,5 +43,6 @@ Contact.belongsTo(User, { foreignKey: 'user_id' });
 //   .catch((err) => {
 //     console.error("Error synchronizing tables:", err);
 //   });
+
 
 module.exports = { sequelize, Estate, Category, User , Contact};
