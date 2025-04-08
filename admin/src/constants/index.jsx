@@ -1,4 +1,4 @@
-import { ChartColumn, Home, Package, PackagePlus, Users } from "lucide-react";
+import { ChartColumn, Home, Package, PackagePlus, Users} from "lucide-react";
 
 import ProfileImage from "@/assets/profile-image.jpg";
 import ProductImage from "@/assets/product-image.jpg";
@@ -38,7 +38,18 @@ export const navbarLinks = [
                 path: "/new-product",
             }
         ],
-    }
+    }  
+    ,{
+        title: "Messages",
+        links: [
+            {
+                label: "Messages",
+                icon: Package,
+                path: "/messages",
+               
+            }
+        ],
+    },
 ];
 
 export const overviewData = [

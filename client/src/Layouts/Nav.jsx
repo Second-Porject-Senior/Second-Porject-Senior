@@ -60,6 +60,7 @@ const Nav = () => {
               <li className="nav-item">
 
                 <Link to="/about" className={`nav-link ${
+                <Link to="/about" className={`nav-link ${
                   scrolled || isDarkPage ? 'text-dark' : 'text-white'
                 }`}>About Us</Link>
               </li>
