@@ -1,6 +1,4 @@
 const {Estate}= require('../database/index');
-const { get } = require('../routes/Estate.routes');
-
 
 module.exports={
     getAllEstate: async (req, res) => {

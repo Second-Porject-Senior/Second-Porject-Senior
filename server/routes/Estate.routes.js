@@ -1,13 +1,18 @@
 const express = require("express")
-const EstateRouter = express.Router()
-const {getAllEstate, getEstateById , updateEstate,createEstate,deleteEstate,getEstatesByCategory} = require("../controllers/Estate.controller")
+const Router = express.Router()
+const { getAllEstate, 
+    getEstateById
+    , updateEstate
+    , createEstate
+    , deleteEstate
+    , getEstatesByCategory } = require("../controllers/Estate.controller")
 
-EstateRouter.get("/getall",getAllEstate)
-EstateRouter.get("/get/:id",getEstateById)
-EstateRouter.post("/create",createEstate)
-EstateRouter.put("/update/:id",updateEstate)
-EstateRouter.delete("/delete/:id",deleteEstate)
-EstateRouter.get("/getByCategory/:categoryId", getEstatesByCategory)
+Router.get("/getall", getAllEstate)
+Router.get("/get/:id", getEstateById)
+Router.post("/create", createEstate)
+Router.put("/update/:id", updateEstate)
+Router.delete("/delete/:id", deleteEstate)
+Router.get("/getByCategory/:categoryId", getEstatesByCategory)
 
 
-module.exports = EstateRouter 
+module.exports = Router 
